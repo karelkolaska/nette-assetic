@@ -1,6 +1,6 @@
 {
 	"name": "karelkolaska/nette-assetic",
-	"description": "Nette extension to manage assets via KrissWallsmith's Assetic.",
+	"description": "Nette extension to manage assets via kriswallsmith/assetic.",
 	"keywords": ["nette", "nette-extension", "assets"],	
 	"authors": [
 		{
