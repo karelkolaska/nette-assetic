@@ -15,7 +15,8 @@
 		"patchwork/jsqueeze": "~1.0.7",
 		"natxet/CssMin": "~3.0.4",
 		"oyejorge/less.php": "~1.7.0.10",
-		"nette/di": ">=2.3.0"
+		"nette/di": ">=2.3.0",
+		"nette/utils": ">=2.3.0"
 	},	
 	"autoload": {
 		"psr-4": {
