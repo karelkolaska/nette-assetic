@@ -15,9 +15,9 @@ class AsseticExtension extends CompilerExtension
 {
 	/** @var array */
 	private static $configDefaults = [
-		'wwwDir' => '%wwwDir%',		
-		'debug' => '%debugMode%',
-		'output' => '%tempPrefix%/*',		
+		'wwwDir' => '%wwwDir%',	
+		'wwwTempDir' => '%wwwTempDir%/*',
+		'debug' => '%debugMode%',		
 		'filters' => [
 			'less' => 'Assetic\Filter\LessphpFilter',
 			'cssmin' => 'Assetic\Filter\CssMinFilter',
@@ -44,7 +44,7 @@ class AsseticExtension extends CompilerExtension
 			->setClass('Assetic\Factory\AssetFactory', [$config['wwwDir']])
 			->addSetup('setAssetManager')
 			->addSetup('setFilterManager')
-			->addSetup('setDefaultOutput', [$config['output']])
+			->addSetup('setDefaultOutput', [$config['wwwTempDir']])
 			->addSetup('setDebug', [$config['debug']]);
 
 		// Asset Writer
@@ -53,7 +53,7 @@ class AsseticExtension extends CompilerExtension
 		
 		// Asset Renderer
 		$builder->addDefinition($this->prefix('assetRenderer'))
-			->setClass('KarelKolaska\NetteAssetic\AssetRenderer');
+			->setClass('KarelKolaska\NetteAssetic\AssetRenderer', [$config['wwwDir']]);
 
 		// Filter Manager
 		$builder->addDefinition($this->prefix('filterManager'))

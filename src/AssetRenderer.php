@@ -15,21 +15,26 @@ use Nette\Utils\Strings,
 class AssetRenderer
 {	
 	/** @var AssetManager */
-	private $assetManager;
+	protected $assetManager;
 
 	/** @var AssetWriter */
-	private $assetWriter;	
+	protected $assetWriter;
+
+	/** @var string */
+	protected $wwwDir;
 	
 	/** @var type */
-	private $assets;
+	protected $assets;
 
 	/**
 	 * 
+	 * @param string $wwwDir
 	 * @param AssetManager $assetManager
 	 * @param AssetWriter $assetWriter
 	 */
-	public function __construct(AssetManager $assetManager, AssetWriter $assetWriter)
+	public function __construct($wwwDir, AssetManager $assetManager, AssetWriter $assetWriter)
 	{
+		$this->wwwDir = $wwwDir;
 		$this->assetManager = $assetManager;
 		$this->assetWriter = $assetWriter;
 	}
@@ -57,8 +62,9 @@ class AssetRenderer
 	{
 		foreach($this->assets as $assetName) {
 			$asset = $this->assetManager->get($assetName);			
-
-			if (!file_exists($asset->getTargetPath()) || (file_exists($asset->getTargetPath()) && $asset->getLastModified() > filemtime($asset->getTargetPath()))) {
+			$assetPath = $this->wwwDir . $asset->getTargetPath();
+			
+			if (!file_exists($assetPath) || (file_exists($assetPath) && $asset->getLastModified() > filemtime($assetPath))) {
 				$this->assetWriter->writeAsset($asset);
 			}			
 			

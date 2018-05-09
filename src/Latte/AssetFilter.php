@@ -14,6 +14,10 @@ class AssetFilter
 	/** @var AssetRenderer */
 	private $assetRenderer;
 
+	/**
+	 * 
+	 * @param AssetRenderer $assetRenderer
+	 */
 	public function __construct(AssetRenderer $assetRenderer)
 	{
 		$this->assetRenderer = $assetRenderer;
