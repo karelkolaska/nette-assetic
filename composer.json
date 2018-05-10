@@ -1,5 +1,5 @@
 {
-	"name": "karelkolaska/nette-assets",
+	"name": "karelkolaska/nette-assetic",
 	"description": "Nette extension to manage assets via kriswallsmith/assetic.",
 	"keywords": ["nette", "nette-extension", "assets"],	
 	"authors": [
@@ -21,7 +21,7 @@
 	},	
 	"autoload": {
 		"psr-4": {
-			"KarelKolaska\\NetteAssets\\": "src/"
+			"KarelKolaska\\NetteAssetic\\": "src/"
 		}
 	}	
 }
