@@ -41,6 +41,47 @@ assetic:
 				- assets/js/*
 ```
 
+Other settings that are not required, and are set by default as below:
+
+### WwwDir
+
+```
+assetic:
+	wwwDir: %wwwDir%
+```
+
+### WwwTempDir
+
+```
+assetic:
+	wwwTempDir: %wwwTempDir%
+```
+
+### DebugMode
+
+```
+assetic:
+	debug: %debugMode%
+```
+
+### Filters
+
+```
+assetic:
+	filters:
+		less: Assetic\Filter\LessphpFilter
+		cssmin: Assetic\Filter\CssMinFilter
+		jsmin: Assetic\Filter\JSMinFilter
+```
+
+### Workers
+
+```
+assetic:
+	workers:
+		# place to register your workers
+```
+
 ## Usage
 
 In template with macro assets:
