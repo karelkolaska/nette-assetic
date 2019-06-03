@@ -1,7 +1,7 @@
 {
 	"name": "karelkolaska/nette-assetic",
-	"description": "Nette extension to manage assets via kriswallsmith/assetic.",
-	"keywords": ["nette", "nette-extension", "assets"],	
+	"description": "Nette wrapper for kriswallsmith/assetic",
+	"keywords": ["nette", "nette-extension", "nette-wrapper", "assets"],
 	"authors": [
 		{
 			"name": "Karel Koláska",
@@ -9,14 +9,14 @@
 		}
 	],
 	"require": {
-		"php": ">=5.6.0",
+		"php": ">=7.1.0",
 		"kriswallsmith/assetic": "^1.4.0",
 		"mrclay/minify": "~2.2.1",
 		"patchwork/jsqueeze": "~1.0.7",
 		"natxet/CssMin": "~3.0.4",
 		"oyejorge/less.php": "~1.7.0.10",
-		"nette/di": ">=2.4.0",
-		"nette/utils": ">=2.4.0",
+		"nette/di": ">=3.0.0",
+		"nette/utils": ">=3.0.0",
 		"latte/latte": ">=2.4.0"
 	},	
 	"autoload": {

@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KarelKolaska\NetteAssetic\DI;
 
-use Nette\DI\Statement,
-	Nette\DI\CompilerExtension;
+use Nette\DI\CompilerExtension;
+use Nette\DI\ContainerBuilder;
+use Nette\DI\Statement;
 use Nette\PhpGenerator\ClassType;
+use Nette\Schema\Context;
 
 /**
  * Assetic Extension
@@ -13,51 +17,57 @@ use Nette\PhpGenerator\ClassType;
  */
 class AsseticExtension extends CompilerExtension
 {
-	/** @var array */
-	private static $configDefaults = [
-		'wwwDir' => '%wwwDir%',	
-		'wwwTempDir' => '%wwwTempDir%/*',
-		'debug' => '%debugMode%',		
-		'filters' => [
-			'less' => 'Assetic\Filter\LessphpFilter',
-			'cssmin' => 'Assetic\Filter\CssMinFilter',
-			'jsmin' => 'Assetic\Filter\JSMinFilter'
-		],
-		'workers' => []
-	];
+	/**
+	 * @param ContainerBuilder $builder
+	 * @return array
+	 */
+	public function getConfigDefaults(ContainerBuilder $builder) : array
+	{
+		return array_merge([
+			'filters' => [
+				'less' => 'Assetic\Filter\LessphpFilter',
+				'cssmin' => 'Assetic\Filter\CssMinFilter',
+				'jsmin' => 'Assetic\Filter\JSMinFilter'
+			],
+			'rebuildAssets' => false,
+			'workers' => []
+		], $builder->parameters);
+	}
 
 	/**
-	 * 
-	 * 
+	 *
 	 */
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$config = $this->getConfig(self::$configDefaults);
-		
+		$config = $this->getConfigSchema()->merge($this->config, $this->getConfigDefaults($builder));
+
 		// Asset Manager
 		$builder->addDefinition($this->prefix('assetManager'))
-			->setClass('Assetic\AssetManager');
+			->setFactory('Assetic\AssetManager');
 
 		// Asset Factory
 		$builder->addDefinition($this->prefix('assetFactory'))
-			->setClass('Assetic\Factory\AssetFactory', [$config['wwwDir']])
+			->setFactory('Assetic\Factory\AssetFactory', [$config['wwwDir']])
 			->addSetup('setAssetManager')
 			->addSetup('setFilterManager')
-			->addSetup('setDefaultOutput', [$config['wwwTempDir']])
-			->addSetup('setDebug', [$config['debug']]);
+			->addSetup('setDefaultOutput', [$config['wwwDir']])
+			->addSetup('setDebug', [$config['debugMode']]);
 
 		// Asset Writer
 		$builder->addDefinition($this->prefix('assetWriter'))
-			->setClass('Assetic\AssetWriter', [$config['wwwDir']]);
-		
+			->setFactory('Assetic\AssetWriter', [$config['wwwDir']]);
+
 		// Asset Renderer
 		$builder->addDefinition($this->prefix('assetRenderer'))
-			->setClass('KarelKolaska\NetteAssetic\AssetRenderer', [$config['wwwDir']]);
+			->setFactory('KarelKolaska\NetteAssetic\AssetRenderer', [
+				$config['wwwDir'],
+				$config['rebuildAssets'],
+			]);
 
 		// Filter Manager
 		$builder->addDefinition($this->prefix('filterManager'))
-			->setClass('Assetic\FilterManager');		
+			->setFactory('Assetic\FilterManager');
 		
 		// Filters		
 		foreach ($config['filters'] as $name => $filter) {			
@@ -73,14 +83,15 @@ class AsseticExtension extends CompilerExtension
 		
 		// Latte macro & filter
 		$builder->addDefinition($this->prefix('latte.assetMacro'))
-			->setClass('KarelKolaska\NetteAssetic\Latte\AssetMacro');
+			->setFactory('KarelKolaska\NetteAssetic\Latte\AssetMacro');
 
 		$builder->addDefinition($this->prefix('latte.assetFilter'))
-			->setClass('KarelKolaska\NetteAssetic\Latte\AssetFilter');
+			->setFactory('KarelKolaska\NetteAssetic\Latte\AssetFilter');
 
 		$builder->getDefinition('nette.latteFactory')
-			->addSetup('addMacro', ['assets', '@' . $this->prefix('latte.assetMacro')])
-			->addSetup('addFilter', ['_assets', '@' . $this->prefix('latte.assetFilter')]);		
+			->getResultDefinition()
+				->addSetup('addMacro', ['assets', '@' . $this->prefix('latte.assetMacro')])
+				->addSetup('addFilter', ['_assets', '@' . $this->prefix('latte.assetFilter')]);
 	}
 	
 	/**
@@ -89,7 +100,8 @@ class AsseticExtension extends CompilerExtension
 	 */
 	public function afterCompile(ClassType $class)
 	{
-		$config = $this->getConfig(self::$configDefaults);
+		$builder = $this->getContainerBuilder();
+		$config = $this->getConfigSchema()->merge($this->config, $this->getConfigDefaults($builder));
 		$initialize = $class->methods['initialize'];
 		
 		foreach($config['assets'] as $name => $asset) {

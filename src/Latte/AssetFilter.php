@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KarelKolaska\NetteAssetic\Latte;
 
 use KarelKolaska\NetteAssetic\AssetRenderer;

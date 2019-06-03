@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KarelKolaska\NetteAssetic\Latte;
 
 use Latte\IMacro;
@@ -13,26 +15,26 @@ use Latte\MacroNode;
 class AssetMacro implements IMacro
 {
 	/**
-	 * 
-	 * 
+	 * Initializes before template parsing.
+	 * @return void
 	 */
 	public function initialize()
 	{
-		
+
 	}
 
 	/**
-	 * 
-	 * 
+	 * Finishes template parsing.
+	 * @return array|null [prolog, epilog]
 	 */
 	public function finalize()
 	{
-		
+
 	}
 
 	/**
-	 * 
-	 * @param MacroNode $node
+	 * New node is found. Returns false to reject.
+	 * @return bool|null
 	 */
 	public function nodeOpened(MacroNode $node)
 	{
@@ -41,11 +43,11 @@ class AssetMacro implements IMacro
 	}
 
 	/**
-	 * 
-	 * @param MacroNode $node
+	 * Node is closed.
+	 * @return void
 	 */
 	public function nodeClosed(MacroNode $node)
 	{
-		
+
 	}
 }

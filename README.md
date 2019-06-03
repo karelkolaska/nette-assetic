@@ -22,20 +22,17 @@ extensions:
 Set extension configuration:
 
 ```
-parameters:
-	wwwTempDir: /temp
-
 assetic:
 	assets:
 		styles:
-			output: %wwwTempDir%/styles.css
+			output: temp/styles.css
 			filters: [less, ?cssmin]
 			files:
 				- assets/css/style.css
 				- assets/less/style.less
 
 		scripts:
-			output: %wwwTempDir%/scripts.js
+			output: temp/scripts.js
 			filters: [jsmin]
 			files:
 				- assets/js/*
@@ -43,18 +40,11 @@ assetic:
 
 Other settings that are not required, and are set by default as below:
 
-### WwwDir
+### Rebuild assets with every hit
 
 ```
-assetic:
-	wwwDir: %wwwDir%
-```
-
-### WwwTempDir
-
-```
-assetic:
-	wwwTempDir: %wwwTempDir%
+parameters:
+	rebuildAssets: true
 ```
 
 ### DebugMode
@@ -95,6 +85,39 @@ Macro save assets output to temp folder and generates HTML:
 ```
 <link rel="stylesheet" href="/temp/styles.css?v=1525856452" />
 <script type="text/javascript" src="/temp/scripts.js?v=1524029735" /></script>
+```
+
+## Example of generating assets on deploy
+
+Symphony console command to generate assets:
+
+```
+use Assetic\AssetManager;
+use Assetic\AssetWriter;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class AssetsBuildCommand extends Command
+{	
+	/** @var string */
+	protected static $defaultName = 'assets:build';
+	
+	/** @var AssetWriter @inject */
+	public $assetWriter;
+
+	/** @var AssetManager @inject */
+	public $assetManager;	
+
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 */
+	protected function execute(InputInterface $input, OutputInterface $output): void
+	{
+		$this->assetWriter->writeManagerAssets($this->assetManager);
+	}
+}
 ```
 
 ## License
