@@ -13,7 +13,7 @@
 		"kriswallsmith/assetic": "^1.4.0",
 		"mrclay/minify": "~2.2.1",
 		"patchwork/jsqueeze": "~1.0.7",
-		"natxet/CssMin": "~3.0.4",
+		"natxet/cssmin": "~3.0.4",
 		"oyejorge/less.php": "~1.7.0.10",
 		"nette/di": ">=3.0.0",
 		"nette/utils": ">=3.0.0",
