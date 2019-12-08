@@ -31,7 +31,7 @@ class AssetFilter
 	 */
 	public function __invoke($assets)
 	{
-		$this->assetRenderer->setAssets($assets);
+		$this->assetRenderer->setAssets(explode(', ', $assets));
 		return $this->assetRenderer->renderHtml();	
 	}
 }
